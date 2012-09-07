@@ -65,5 +65,39 @@ namespace ConsoleApplication1
       var l = s.Select(c => Int32.Parse(c.ToString())).ToArray();
       return l;
     }
+
+    /// <summary>
+    /// Convert a 2d string into an array of ints
+    /// </summary>
+    public static int[,] To2dArray(string input, string lineSeparator, string colSeparator)
+    {
+      //e.g. string s = @"1 2
+      //                  3 4"
+      // to a corres int[,]
+      int[,] a = null;
+      input = input.Trim();
+      var rows = input.Split(new string[] { lineSeparator }, StringSplitOptions.RemoveEmptyEntries);
+      for (int i = 0; i < rows.Length; i++)
+      {
+        var row = rows[i];
+        var cols = row.Split(new string[] { colSeparator }, StringSplitOptions.RemoveEmptyEntries);
+        for (int j = 0; j < cols.Length; j++)
+        {
+          if (a == null)
+          {
+            a = new int[rows.Length, cols.Length];
+          }
+          if (a.GetUpperBound(1) < cols.Length)
+          {
+            var newA = new int[rows.Length, cols.Length];
+            Array.Copy(a, newA, a.Length);
+            a = newA;
+          }
+          int.TryParse(cols[j], out a[i, j]);
+        }
+      }
+
+      return a;
+    }
   }
 }
